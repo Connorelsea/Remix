@@ -12,6 +12,8 @@ const Link = Routing.Link
 
 import { compose } from "react-apollo"
 
+// TODO: rename to messages
+
 class Chat extends React.Component {
   state = {
     draft: "",
@@ -30,6 +32,7 @@ class Chat extends React.Component {
 
   @bind
   onDraftChange(draft) {
+    if (this.state.draft == -9) this.setState({ draft: "" })
     this.setState({ draft })
   }
 
@@ -51,6 +54,15 @@ class Chat extends React.Component {
       variables,
       refetchQueries: [{ query: channelQuery, variables: refetchVariables }],
     })
+
+    this.scrollView.scrollToEnd({ animated: true })
+    this.input.clear()
+    this.input.selectionState.focus()
+    this.setState({ draft: -9 })
+  }
+
+  componentDidMount() {
+    this.scrollView.scrollToEnd({ animated: true })
   }
 
   render() {
@@ -59,15 +71,27 @@ class Chat extends React.Component {
 
     return (
       <ViewContainer>
-        <ScrollView>{messages.map(this.renderMessage)}</ScrollView>
+        <ScrollView
+          style={{ height: "100%" }}
+          ref={scroll => {
+            this.scrollView = scroll
+          }}
+          onContentSizeChange={(contentWidth, contentHeight) =>
+            this.scrollView.scrollToEnd({ animated: true })}
+          keyboardDismissMode="on-drag"
+        >
+          {messages.map(this.renderMessage)}
+        </ScrollView>
         <InputContainer>
-          <Input
+          <StyleInput
+            innerRef={input => {
+              this.input = input
+            }}
             autoFocus
             onChangeText={this.onDraftChange}
             blurOnSubmit
             onSubmitEditing={this.onDraftSubmit}
             placeholder="Message..."
-            value={this.state.draft}
           />
         </InputContainer>
       </ViewContainer>
@@ -76,20 +100,23 @@ class Chat extends React.Component {
 }
 
 const InputContainer = glamorous.view({
-  backgroundColor: "gray",
-})
-
-const Input = glamorous(TextInput)({
-  borderWidth: "1px",
-  borderColor: "#dddfe2",
-  borderStyle: "solid",
+  backgroundColor: "white",
   position: "fixed",
   bottom: 0,
   left: 0,
   width: "100%",
   height: 50,
   padding: 10,
-  backgroundColor: "white",
+  alignItems: "center",
+  borderWidth: "1px",
+  borderColor: "#dddfe2",
+  borderStyle: "solid",
+  flex: 1,
+})
+
+const StyleInput = glamorous(TextInput)({
+  height: "100%",
+  width: "100%",
 })
 
 const Message = glamorous.view({
@@ -100,7 +127,7 @@ const Message = glamorous.view({
   borderBottomStyle: "solid",
 })
 
-const MessageName = glamorous.view({
+const MessageName = glamorous.text({
   fontSize: "0.9rem",
   fontWeight: "bold",
   marginBottom: 4,
@@ -108,6 +135,7 @@ const MessageName = glamorous.view({
 
 const ViewContainer = glamorous.view({
   marginBottom: 50,
+  flex: 1,
 })
 
 const createMessageMutation = gql`

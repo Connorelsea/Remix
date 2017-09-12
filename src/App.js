@@ -68,15 +68,16 @@ class App extends React.Component {
       this.setState({ loggedIn: true })
     }
 
+    if (window.localStorage.getItem("userId")) {
+      console.log("TRUUU")
+      this.setState({ loggedIn: true })
+    }
+
     this.lock.on("authenticated", authResult => {
       console.log("SETTING ON LOCAL STORAGE", authResult)
       window.localStorage.setItem("auth0IdToken", authResult.idToken)
       this.setState({ loggedIn: true })
     })
-  }
-
-  isLoggedIn() {
-    return this.props.data.user
   }
 
   logout() {

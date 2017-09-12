@@ -21,24 +21,25 @@ class Body extends React.Component {
 
     console.log("user", user)
 
+    // TODO: idk about this right here...
     if (user) {
       window.localStorage.setItem("userId", user.id)
     }
 
-    if (!user && this.props.loggedIn) {
-      return <Route path="/" component={UserFirstSetup} />
-    }
+    // if (!user && this.props.loggedIn) {
+    //   return <Route path="/" component={UserFirstSetup} />
+    // }
 
     return (
-      <View>
+      <View style={{ flex: 1 }}>
         {this.props.loggedIn ? (
-          <View>
+          <View style={{ flex: 1 }}>
             <Route exact path="/" component={ChatIndex} />
             <Route exact path="/group/:id" component={Channels} />
             <Route exact path="/group/:id/:channel_id" component={Chat} />
           </View>
         ) : (
-          <View>
+          <View style={{ flex: 1 }}>
             <Route
               path="/"
               render={() => <Welcome showLogin={this.props.showLogin} />}

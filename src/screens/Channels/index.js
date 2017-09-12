@@ -17,11 +17,14 @@ class Channels extends React.Component {
   renderListItem(channel) {
     const { id, name } = channel
     return (
-      <Container key={id}>
-        <Text>#{name}</Text>
-        <Text>{id}</Text>
-        <Link to={`/group/${this.props.match.params.id}/${id}`}>Enter</Link>
-      </Container>
+      <ChannelLink>
+        <Link to={`/group/${this.props.match.params.id}/${id}`}>
+          <ChannelLinkText>
+            <span>#</span>
+            {name}
+          </ChannelLinkText>
+        </Link>
+      </ChannelLink>
     )
   }
 
@@ -30,19 +33,28 @@ class Channels extends React.Component {
     return (
       <View>
         <Text>Channels</Text>
-        <Link to={`/group/${this.props.match.params.id}`}>Back</Link>
+        <Link to="/">Back</Link>
         <ScrollView>{channels.map(this.renderListItem)}</ScrollView>
       </View>
     )
   }
 }
 
-const Container = glamorous.view({
+const ChannelLink = glamorous.view({
   backgroundColor: "#fff",
+  width: "100%",
   padding: 20,
   borderBottomWidth: "1px",
   borderBottomColor: "#dddfe2",
   borderBottomStyle: "solid",
+  cursor: "pointer",
+})
+
+const ChannelLinkText = glamorous.text({
+  fontWeight: "bold",
+  textTransform: "lowercase",
+  textDecoration: "none",
+  color: "black",
 })
 
 const channelQuery = gql`

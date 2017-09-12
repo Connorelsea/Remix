@@ -29,6 +29,7 @@ class ChatIndex extends React.Component {
 
   render() {
     const allGroups = this.props.data.allGroups || []
+
     return (
       <ScrollView>
         <Text>Groups</Text>
@@ -64,8 +65,6 @@ const groupQuery = gql`
 const groupQueryVariables = {
   userId: window.localStorage.getItem("userId"),
 }
-
-console.log("ggggg", groupQueryVariables)
 
 export default graphql(groupQuery, {
   options: { variables: groupQueryVariables },
