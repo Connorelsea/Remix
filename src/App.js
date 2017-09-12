@@ -2,6 +2,7 @@ import React from "react"
 import { Provider } from "react-redux"
 import store from "./utilities/storage/store"
 import { Router } from "./utilities/routing"
+import UserProvider from "./UserProvider"
 
 import { bind } from "decko"
 
@@ -18,6 +19,34 @@ import {
 import Auth0Lock from "auth0-lock"
 
 import Body from "./Body"
+
+const networkInterface = createNetworkInterface({
+  uri: "https://api.graph.cool/simple/v1/cj7bjx88t1ir1019460i39dmi",
+})
+
+networkInterface.use([
+  {
+    applyMiddleware(req, next) {
+      if (!req.options.headers) {
+        req.options.headers = {}
+      }
+
+      console.log("applying middleware")
+
+      // get the authentication token from local storage if it exists
+      if (localStorage.getItem("auth0IdToken")) {
+        console.log("apply header", localStorage.getItem("auth0IdToken"))
+        req.options.headers.authorization = `Bearer ${localStorage.getItem(
+          "auth0IdToken"
+        )}`
+      }
+
+      next()
+    },
+  },
+])
+
+let client = new ApolloClient({ networkInterface })
 
 class App extends React.Component {
   state = {
@@ -37,46 +66,22 @@ class App extends React.Component {
         scope: "openid offline_access",
       }
     )
-
-    const networkInterface = createNetworkInterface({
-      uri: "https://api.graph.cool/simple/v1/cj7bjx88t1ir1019460i39dmi",
-    })
-
-    networkInterface.use([
-      {
-        applyMiddleware(req, next) {
-          if (!req.options.headers) {
-            req.options.headers = {}
-          }
-
-          // get the authentication token from local storage if it exists
-          if (localStorage.getItem("auth0IdToken")) {
-            req.options.headers.authorization = `Bearer ${localStorage.getItem(
-              "auth0IdToken"
-            )}`
-          }
-          next()
-        },
-      },
-    ])
-
-    this.client = new ApolloClient({ networkInterface })
   }
 
   componentDidMount() {
-    if (window.localStorage.getItem("auth0IdToken")) {
-      this.setState({ loggedIn: true })
-    }
+    // if (window.localStorage.getItem("auth0IdToken")) {
+    //   this.setState({ loggedIn: true })
+    // }
 
-    if (window.localStorage.getItem("userId")) {
-      console.log("TRUUU")
-      this.setState({ loggedIn: true })
-    }
+    // if (window.localStorage.getItem("userId")) {
+    //   console.log("TRUUU")
+    //   this.setState({ loggedIn: true })
+    // }
 
     this.lock.on("authenticated", authResult => {
       console.log("SETTING ON LOCAL STORAGE", authResult)
       window.localStorage.setItem("auth0IdToken", authResult.idToken)
-      this.setState({ loggedIn: true })
+      // this.setState({ loggedIn: true })
     })
   }
 
@@ -92,13 +97,13 @@ class App extends React.Component {
 
   render() {
     return (
-      <Provider store={store}>
-        <ApolloProvider client={this.client}>
+      <ApolloProvider client={client}>
+        <Provider store={store}>
           <Router>
             <Body showLogin={this.showLogin} loggedIn={this.state.loggedIn} />
           </Router>
-        </ApolloProvider>
-      </Provider>
+        </Provider>
+      </ApolloProvider>
     )
   }
 }

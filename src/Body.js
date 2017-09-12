@@ -13,52 +13,39 @@ const Route = Routing.Route
 
 import { gql, graphql } from "react-apollo"
 
+import UserProvider from "./UserProvider"
+
 class Body extends React.Component {
   render() {
     console.log("data", this.props)
 
-    const user = this.props.data.user
-
-    console.log("user", user)
-
-    // TODO: idk about this right here...
-    if (user) {
-      window.localStorage.setItem("userId", user.id)
-    }
-
-    // if (!user && this.props.loggedIn) {
-    //   return <Route path="/" component={UserFirstSetup} />
-    // }
-
     return (
-      <View style={{ flex: 1 }}>
-        {this.props.loggedIn ? (
+      <UserProvider>
+        {user => (
           <View style={{ flex: 1 }}>
-            <Route exact path="/" component={ChatIndex} />
-            <Route exact path="/group/:id" component={Channels} />
-            <Route exact path="/group/:id/:channel_id" component={Messages} />
-          </View>
-        ) : (
-          <View style={{ flex: 1 }}>
-            <Route
-              path="/"
-              render={() => <Welcome showLogin={this.props.showLogin} />}
-            />
+            {user ? (
+              <View style={{ flex: 1 }}>
+                <Route exact path="/" component={ChatIndex} />
+                <Route exact path="/group/:id" component={Channels} />
+                <Route
+                  exact
+                  path="/group/:id/:channel_id"
+                  component={Messages}
+                />
+              </View>
+            ) : (
+              <View style={{ flex: 1 }}>
+                <Route
+                  path="/"
+                  render={() => <Welcome showLogin={this.props.showLogin} />}
+                />
+              </View>
+            )}
           </View>
         )}
-      </View>
+      </UserProvider>
     )
   }
 }
 
-const userQuery = gql`
-  query {
-    user {
-      id
-    }
-  }
-`
-
-export default graphql(userQuery, { options: { fetchPolicy: "network-only" } })(
-  Body
-)
+export default Body

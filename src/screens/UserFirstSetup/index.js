@@ -8,6 +8,8 @@ import { bind } from "decko"
 
 import { Text, View, Button, TextInput } from "react-native"
 
+import { withRouter } from "react-router-dom"
+
 class UserFirstSetup extends React.Component {
   state = {
     userName: "",
@@ -28,6 +30,7 @@ class UserFirstSetup extends React.Component {
         console.log("After create user")
         console.log(response)
         window.localStorage.setItem("userId", response.data.createUser.id)
+        this.props.router.replace(`/`)
       })
       .catch(error => console.error("error on create", error))
   }
@@ -75,6 +78,8 @@ const userQuery = gql`
 
 export default graphql(createUser, { name: "createUser" })(
   graphql(userQuery, { options: { fetchPolicy: "network-only" } })(
-    UserFirstSetup
+    withRouter(UserFirstSetup)
   )
 )
+
+// export default graphql(createUser, { name: "createUser" })(UserFirstSetup)

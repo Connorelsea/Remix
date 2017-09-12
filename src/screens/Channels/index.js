@@ -53,7 +53,6 @@ const ChannelLink = glamorous.view({
 const ChannelLinkText = glamorous.text({
   fontWeight: "bold",
   textTransform: "lowercase",
-  textDecoration: "none",
   color: "black",
 })
 

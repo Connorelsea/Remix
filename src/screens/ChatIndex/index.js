@@ -8,8 +8,6 @@ import glamorous from "glamorous-primitives"
 import Routing from "../../utilities/routing"
 const Link = Routing.Link
 
-import { Header } from "react-native-elements"
-
 // TODO: Rename to Groups
 
 class ChatIndex extends React.Component {
