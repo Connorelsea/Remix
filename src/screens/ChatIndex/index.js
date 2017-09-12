@@ -8,13 +8,14 @@ import glamorous from "glamorous-primitives"
 import Routing from "../../utilities/routing"
 const Link = Routing.Link
 
+import { Header } from "react-native-elements"
+
 // TODO: Rename to Groups
 
 class ChatIndex extends React.Component {
-  componentWillMount() {}
-
   renderListItem(group) {
     const { id, name, channels } = group
+
     return (
       <Container key={id}>
         <Text>{name}</Text>
@@ -46,8 +47,8 @@ const Container = glamorous.view({
 })
 
 const groupQuery = gql`
-  query {
-    allGroups(filter: { users_some: { id: "cj7gh2irgfjtx0179t9pclxrd" } }) {
+  query($userId: ID!) {
+    allGroups(filter: { users_some: { id: $userId } }) {
       id
       name
       channels {
@@ -60,4 +61,12 @@ const groupQuery = gql`
   }
 `
 
-export default graphql(groupQuery)(ChatIndex)
+const groupQueryVariables = {
+  userId: window.localStorage.getItem("userId"),
+}
+
+console.log("ggggg", groupQueryVariables)
+
+export default graphql(groupQuery, {
+  options: { variables: groupQueryVariables },
+})(ChatIndex)

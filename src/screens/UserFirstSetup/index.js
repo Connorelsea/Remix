@@ -6,12 +6,12 @@ import { gql, graphql } from "react-apollo"
 
 import { bind } from "decko"
 
-import { Text, View, Button } from "react-native"
+import { Text, View, Button, TextInput } from "react-native"
 
 class UserFirstSetup extends React.Component {
   state = {
-    userName: "connor",
-    displayName: "Connor Elsea",
+    userName: "",
+    displayName: "",
   }
 
   @bind
@@ -21,8 +21,6 @@ class UserFirstSetup extends React.Component {
       userName: this.state.userName,
       displayName: this.state.displayName,
     }
-
-    console.log(variables)
 
     this.props
       .createUser({ variables })
@@ -37,7 +35,18 @@ class UserFirstSetup extends React.Component {
   render() {
     return (
       <View>
-        <Text>User First Setup</Text>{" "}
+        <Text>User First Setup</Text> <Text>Username, like @username</Text>
+        <TextInput
+          placeholder="User Name"
+          onChangeText={text => this.setState({ userName: text })}
+          value={this.state.userName}
+        />
+        <Text>Display Name, like "First Last"</Text>
+        <TextInput
+          placeholder="Display Name"
+          onChangeText={text => this.setState({ displayName: text })}
+          value={this.state.displayName}
+        />
         <Button onPress={this.createUser} title="Create" />
       </View>
     )

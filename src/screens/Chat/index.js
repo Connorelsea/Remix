@@ -22,7 +22,7 @@ class Chat extends React.Component {
 
     return (
       <Message key={id}>
-        <Text>{displayName}</Text>
+        <MessageName>{displayName}</MessageName>
         <Text>{content}</Text>
       </Message>
     )
@@ -94,10 +94,16 @@ const Input = glamorous(TextInput)({
 
 const Message = glamorous.view({
   backgroundColor: "#fff",
-  padding: 20,
+  padding: 15,
   borderBottomWidth: "1px",
   borderBottomColor: "#dddfe2",
   borderBottomStyle: "solid",
+})
+
+const MessageName = glamorous.view({
+  fontSize: "0.9rem",
+  fontWeight: "bold",
+  marginBottom: 4,
 })
 
 const ViewContainer = glamorous.view({
