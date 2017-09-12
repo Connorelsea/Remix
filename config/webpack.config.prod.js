@@ -113,7 +113,7 @@ module.exports = {
         test: /\.(js|jsx)$/,
         include: paths.appSrc,
         loader: "babel",
-        options: {
+        query: {
           plugins: ["transform-decorators-legacy"],
         },
       },
