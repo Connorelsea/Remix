@@ -20,12 +20,19 @@ class Messages extends React.Component {
   }
 
   renderMessage(message) {
-    const { id, name, object: { content }, user: { displayName } } = message
+    const {
+      id,
+      name,
+      createdAt,
+      object: { content },
+      user: { displayName },
+    } = message
 
     return (
       <Message key={id}>
         <MessageName>{displayName}</MessageName>
         <Text>{content}</Text>
+        <Time>{createdAt}</Time>
       </Message>
     )
   }
@@ -133,6 +140,11 @@ const MessageName = glamorous.text({
   marginBottom: 4,
 })
 
+const Time = glamorous.text({
+  fontSize: "0.75rem",
+  color: "gray",
+})
+
 const ViewContainer = glamorous.view({
   marginBottom: 50,
   flex: 1,
@@ -157,6 +169,7 @@ const channelQuery = gql`
       name
       messages {
         messageType
+        createdAt
         object {
           objectType
           content
@@ -173,6 +186,7 @@ const channelQuery = gql`
 
 const channelQueryOptions = ({ match: { params: { channel_id } } }) => ({
   variables: { channelId: channel_id },
+  pollInterval: 3000,
 })
 
 const createMessageMutationOptions = {

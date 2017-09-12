@@ -12,13 +12,16 @@ const Link = Routing.Link
 
 class ChatIndex extends React.Component {
   renderListItem(group) {
-    const { id, name, channels } = group
+    const { id, name, channels, users } = group
 
     return (
       <Container key={id}>
         <Text>{name}</Text>
         <Text>
           {channels.length} Channel{channels.length > 1 && "s"}
+        </Text>
+        <Text>
+          {users.length} User{users.length > 1 && "s"}
         </Text>
         <Link to={`/group/${id}`}>Enter Group</Link>
       </Container>
@@ -31,6 +34,7 @@ class ChatIndex extends React.Component {
     return (
       <ScrollView>
         <Text>Groups</Text>
+        <Text>Version {process.env.REACT_APP_VERSION}</Text>
         {allGroups.map(this.renderListItem)}
       </ScrollView>
     )
