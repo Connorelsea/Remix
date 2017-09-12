@@ -14,7 +14,7 @@ import { compose } from "react-apollo"
 
 // TODO: rename to messages
 
-class Chat extends React.Component {
+class Messages extends React.Component {
   state = {
     draft: "",
   }
@@ -185,4 +185,4 @@ export default compose(
     options: createMessageMutationOptions,
   }),
   graphql(channelQuery, { options: channelQueryOptions })
-)(Chat)
+)(Messages)

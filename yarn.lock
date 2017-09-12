@@ -1055,7 +1055,7 @@ babel-plugin-transform-react-jsx@6.22.0, babel-plugin-transform-react-jsx@^6.22.
     babel-plugin-syntax-jsx "^6.8.0"
     babel-runtime "^6.22.0"
 
-babel-plugin-transform-react-remove-prop-types@^0.4.6:
+babel-plugin-transform-react-remove-prop-types@^0.4.8:
   version "0.4.8"
   resolved "https://registry.yarnpkg.com/babel-plugin-transform-react-remove-prop-types/-/babel-plugin-transform-react-remove-prop-types-0.4.8.tgz#0aff04bc1d6564ec49cf23bcffb99c11881958db"
   dependencies:
@@ -1402,7 +1402,7 @@ babel-runtime@6.22.0:
     core-js "^2.4.0"
     regenerator-runtime "^0.10.0"
 
-babel-runtime@^6.0.0, babel-runtime@^6.18.0, babel-runtime@^6.2.0, babel-runtime@^6.20.0, babel-runtime@^6.22.0, babel-runtime@^6.23.0, babel-runtime@^6.26.0:
+babel-runtime@^6.0.0, babel-runtime@^6.18.0, babel-runtime@^6.2.0, babel-runtime@^6.20.0, babel-runtime@^6.22.0, babel-runtime@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
   dependencies:
@@ -2157,7 +2157,7 @@ create-error-class@^3.0.1:
   dependencies:
     capture-stack-trace "^1.0.0"
 
-create-react-class@^15.5.2, create-react-class@^15.6.0:
+create-react-class@^15.6.0:
   version "15.6.0"
   resolved "https://registry.yarnpkg.com/create-react-class/-/create-react-class-15.6.0.tgz#ab448497c26566e1e29413e883207d57cfe7bed4"
   dependencies:
@@ -2412,7 +2412,7 @@ dateformat@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/dateformat/-/dateformat-2.0.0.tgz#2743e3abb5c3fc2462e527dca445e04e9f4dee17"
 
-debounce@1.0.2, debounce@^1.0.0:
+debounce@1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.0.2.tgz#503cc674d8d7f737099664fb75ddbd36b9626dc6"
 
@@ -3311,7 +3311,7 @@ fbjs@^0.3.1:
     ua-parser-js "^0.7.9"
     whatwg-fetch "^0.9.0"
 
-fbjs@^0.8.12, fbjs@^0.8.14, fbjs@^0.8.8, fbjs@^0.8.9, fbjs@~0.8.9:
+fbjs@^0.8.12, fbjs@^0.8.14, fbjs@^0.8.9, fbjs@~0.8.9:
   version "0.8.14"
   resolved "https://registry.yarnpkg.com/fbjs/-/fbjs-0.8.14.tgz#d1dbe2be254c35a91e09f31f9cd50a40b2a0ed1c"
   dependencies:
@@ -4248,7 +4248,7 @@ inline-style-prefixer@^2.0.5:
     bowser "^1.0.0"
     hyphenate-style-name "^1.0.1"
 
-inline-style-prefixer@^3.0.2, inline-style-prefixer@^3.0.6, inline-style-prefixer@^3.0.7:
+inline-style-prefixer@^3.0.6, inline-style-prefixer@^3.0.7:
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/inline-style-prefixer/-/inline-style-prefixer-3.0.7.tgz#0ccc92e5902fe6e0d28d975c4258443f880615f8"
   dependencies:
@@ -6747,24 +6747,7 @@ react-native-vector-icons@^4.3.0:
     prop-types "^15.5.10"
     yargs "^8.0.2"
 
-react-native-web@0.0.x:
-  version "0.0.88"
-  resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.0.88.tgz#fee24ec44e4170f93babc94b4b26473323abb0c4"
-  dependencies:
-    animated "^0.2.0"
-    array-find-index "^1.0.2"
-    babel-runtime "^6.23.0"
-    create-react-class "^15.5.2"
-    debounce "^1.0.0"
-    deep-assign "^2.0.0"
-    fbjs "^0.8.8"
-    hyphenate-style-name "^1.0.2"
-    inline-style-prefixer "^3.0.2"
-    normalize-css-color "^1.0.2"
-    prop-types "^15.5.8"
-    react-timer-mixin "^0.13.3"
-
-react-native-web@^0.0.121:
+react-native-web@0.0.x, react-native-web@^0.0.121:
   version "0.0.121"
   resolved "https://registry.yarnpkg.com/react-native-web/-/react-native-web-0.0.121.tgz#095ecb78169b9133587927f9d9b6d90d5af96b23"
   dependencies:
