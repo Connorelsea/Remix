@@ -28,12 +28,21 @@ class Messages extends React.Component {
       user: { displayName },
     } = message
 
+    const date = new Date(createdAt)
+    let hours = date.getHours()
+
+    if (hours > 12) hours -= 12
+
     return (
-      <Message key={id}>
-        <MessageName>{displayName}</MessageName>
-        <Text>{content}</Text>
-        <Time>{createdAt}</Time>
-      </Message>
+      <MessageContainer>
+        <Message key={id}>
+          <UpperContainer>
+            <MessageName>{displayName}</MessageName>
+            <Time>{`${hours}:${date.getMinutes()}:${date.getSeconds()}`}</Time>
+          </UpperContainer>
+          <Text>{content}</Text>
+        </Message>
+      </MessageContainer>
     )
   }
 
@@ -126,28 +135,50 @@ const StyleInput = glamorous(TextInput)({
   width: "100%",
 })
 
+const MessageContainer = glamorous.view({
+  justifyContent: "flex-start",
+  flexDirection: "row",
+  display: "flex",
+})
+
 const Message = glamorous.view({
-  backgroundColor: "#fff",
-  padding: 15,
+  padding: 12,
+  paddingTop: 10,
+  paddingBottom: 10,
   borderBottomWidth: "1px",
   borderBottomColor: "#dddfe2",
   borderBottomStyle: "solid",
+  backgroundColor: "white",
+  borderRadius: 7,
+  maxWidth: "80%",
+  marginLeft: 13,
+  marginBottom: 9,
+  boxShadow: "0 0 0.5px 0 rgba(0,0,0,.14), 0 1px 1px 0 rgba(0,0,0,.24)",
+  transition: "all 0.4s",
+})
+
+const UpperContainer = glamorous.view({
+  flexDirection: "row",
+  alignItems: "baseline",
+  marginBottom: 5,
 })
 
 const MessageName = glamorous.text({
   fontSize: "0.9rem",
   fontWeight: "bold",
   marginBottom: 4,
+  marginRight: 8,
 })
 
 const Time = glamorous.text({
-  fontSize: "0.75rem",
+  fontSize: "0.71rem",
   color: "gray",
 })
 
 const ViewContainer = glamorous.view({
   marginBottom: 50,
   flex: 1,
+  backgroundColor: "#eee",
 })
 
 const createMessageMutation = gql`
