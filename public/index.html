@@ -3,6 +3,23 @@
 
 <head>
   <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body>div {
+      height: 100%;
+      overflow: scroll;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    * {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif !important;
+    }
+
     html {
       height: 100vh;
       width: 100vw;
@@ -29,7 +46,7 @@
     }
   </style>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
 
   <!--

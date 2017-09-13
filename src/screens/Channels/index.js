@@ -10,6 +10,8 @@ import { bind } from "decko"
 import Routing from "../../utilities/routing"
 const Link = Routing.Link
 
+import { Header, HeaderLink, HeaderTitle } from "../../components/Header"
+
 class Channels extends React.Component {
   componentWillMount() {}
 
@@ -32,8 +34,10 @@ class Channels extends React.Component {
     const channels = this.props.data.Group ? this.props.data.Group.channels : []
     return (
       <View>
-        <Text>Channels</Text>
-        <Link to="/">Back</Link>
+        <Header>
+          <HeaderLink to={`/`}>Back</HeaderLink>
+          <HeaderTitle>Channels</HeaderTitle>
+        </Header>
         <ScrollView>{channels.map(this.renderListItem)}</ScrollView>
       </View>
     )

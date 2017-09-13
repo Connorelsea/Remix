@@ -12,6 +12,10 @@ const Link = Routing.Link
 
 import { compose } from "react-apollo"
 
+import colorContrast from "font-color-contrast"
+
+import { Header, HeaderLink, HeaderTitle } from "../../components/Header"
+
 // TODO: rename to messages
 
 class Messages extends React.Component {
@@ -21,7 +25,7 @@ class Messages extends React.Component {
       name,
       createdAt,
       object: { content },
-      user: { displayName, colorPrimary, colorSecondary },
+      user: { displayName, colorPrimary, colorSecondary, ...props },
     } = message
 
     const date = new Date(createdAt)
@@ -30,7 +34,9 @@ class Messages extends React.Component {
     if (hours > 12) hours -= 12
 
     return (
-      <MessageContainer>
+      <MessageContainer
+        you={props.id === window.localStorage.getItem("userId")}
+      >
         <Message
           key={id}
           colorPrimary={colorPrimary}
@@ -66,21 +72,31 @@ class Messages extends React.Component {
     })
 
     this.scrollView.scrollToEnd({ animated: true })
-    this.input.value = ""
-    this.input.clear()
-    this.input.selectionState.focus()
+    this.draftInput.clear()
+    this.draftInput.selectionState.focus()
   }
 
   componentDidMount() {
     this.scrollView.scrollToEnd({ animated: true })
   }
 
+  @bind
+  onInputUnFocus() {
+    this.draftInput.focus()
+  }
+
   render() {
     const channel = this.props.data.Channel || { messages: [] }
-    const { name, messages } = channel
+    const { name, messages, group: { id } = { id: "" } } = channel
 
     return (
       <ViewContainer>
+        <Header three>
+          <HeaderLink to={`/group/${id}`}>Back</HeaderLink>
+          <HeaderTitle>#{name}</HeaderTitle>
+          <HeaderLink to="/">Info</HeaderLink>
+        </Header>
+
         <ScrollView
           style={{ height: "100%" }}
           ref={scroll => {
@@ -94,6 +110,10 @@ class Messages extends React.Component {
         </ScrollView>
         <InputContainer>
           <StyleInput
+            innerRef={input => {
+              this.draftInput = input
+            }}
+            onBlur={this.onInputUnFocus}
             onSubmitEditing={this.onDraftSubmit}
             placeholder="Message..."
           />
@@ -123,30 +143,37 @@ const StyleInput = glamorous(TextInput)({
   width: "100%",
 })
 
-const MessageContainer = glamorous.view({
-  justifyContent: "flex-start",
-  flexDirection: "row",
-  display: "flex",
-})
+const MessageContainer = glamorous.view(
+  {
+    justifyContent: "flex-start",
+    flexDirection: "row",
+    display: "flex",
+  },
+  ({ you }) => ({ justifyContent: you && "flex-end" })
+)
 
 const Message = glamorous.view(
   {
-    padding: 12,
-    paddingTop: 10,
-    paddingBottom: 10,
-    borderBottomWidth: "1px",
-    borderBottomColor: "#dddfe2",
-    borderBottomStyle: "solid",
-    backgroundColor: "white",
-    borderRadius: 7,
+    padding: 10,
+    paddingTop: 8,
+    paddingBottom: 8,
+    margin: 10,
+    marginTop: 0,
+
+    borderRadius: 5,
     maxWidth: "80%",
-    marginLeft: 13,
-    marginBottom: 9,
-    boxShadow: "0 0 0.5px 0 rgba(0,0,0,.14), 0 1px 1px 0 rgba(0,0,0,.24)",
-    transition: "all 0.4s",
+    // Hovering doesn't work??
+    // transition: "all 0.4s",
+    // "&:hover": {
+    //   boxShadow: "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
+    // },
+    opacity: 1,
   },
   ({ colorPrimary, colorSecondary }) => ({
-    background: `linear-gradient(135deg, ${colorSecondary} 0%,${colorPrimary} 100%)`,
+    background: `linear-gradient(135deg, ${colorSecondary} 0%, ${colorPrimary} 100%)`,
+    transition: "all 0.3s cubic-bezier(.25,.8,.25,1)",
+    boxShadow: `0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)`,
+    color: colorContrast(colorSecondary),
   })
 )
 
@@ -157,15 +184,14 @@ const UpperContainer = glamorous.view({
 })
 
 const MessageName = glamorous.text({
-  fontSize: "0.9rem",
+  fontSize: "0.75rem",
   fontWeight: "bold",
-  marginBottom: 4,
   marginRight: 8,
 })
 
 const Time = glamorous.text({
-  fontSize: "0.71rem",
-  color: "gray",
+  fontSize: "0.68rem",
+  opacity: 0.5,
 })
 
 const ViewContainer = glamorous.view({
@@ -191,6 +217,9 @@ const channelQuery = gql`
   query($channelId: ID!) {
     Channel(id: $channelId) {
       name
+      group {
+        id
+      }
       messages {
         messageType
         createdAt

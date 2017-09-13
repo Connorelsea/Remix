@@ -8,6 +8,8 @@ import glamorous from "glamorous-primitives"
 import Routing from "../../utilities/routing"
 const Link = Routing.Link
 
+import { Header, HeaderLink, HeaderTitle } from "../../components/Header"
+
 // TODO: Rename to Groups
 
 class ChatIndex extends React.Component {
@@ -33,8 +35,10 @@ class ChatIndex extends React.Component {
 
     return (
       <ScrollView>
-        <Text>Groups</Text>
-        <Text>Version {process.env.REACT_APP_VERSION}</Text>
+        <Header>
+          <HeaderTitle>Groups</HeaderTitle>
+          <HeaderLink to="/">{process.env.REACT_APP_VERSION}</HeaderLink>
+        </Header>
         {allGroups.map(this.renderListItem)}
       </ScrollView>
     )

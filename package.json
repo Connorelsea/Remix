@@ -22,6 +22,7 @@
     "dotenv": "2.0.0",
     "file-loader": "^0.11.1",
     "firebase": "^4.3.1",
+    "font-color-contrast": "^1.0.3",
     "glamor": "^2.20.40",
     "glamorous": "^4.8.0",
     "glamorous-native": "^1.1.2",

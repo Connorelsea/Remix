@@ -25,6 +25,7 @@ class UserProvider extends React.Component {
       this.props.data.user === null &&
       window.localStorage.getItem("auth0IdToken")
     ) {
+      // this also happens when token expires i think
       console.log("user first setup")
       return <UserFirstSetup />
       // this.props.router.replace(`/login`)

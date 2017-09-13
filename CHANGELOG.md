@@ -21,3 +21,16 @@
   + Add personal color
 - Bug Fixes
   + Remove lag from message input
+
+# Version 0.1.4
+- Features
+  + Auto-selecting input
+  + Basic app headers
+- Enhancements
+  + Message bubble design updates
+  + Right-oriented self messages
+  + Match contrast of message text with background
+  + App doesn't content overflow on mobile
+- Bug Fixes
+  + Fix input selection on mobile
+  + Fix no default personal color
