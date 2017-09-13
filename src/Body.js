@@ -1,7 +1,8 @@
 import React from "react"
 import Welcome from "./screens/Welcome"
 
-import ChatIndex from "./screens/ChatIndex"
+import Groups from "./screens/Groups"
+import ChatScreen from "./screens/ChatScreen"
 import Channels from "./screens/Channels"
 import Messages from "./screens/Messages"
 import UserFirstSetup from "./screens/UserFirstSetup"
@@ -25,12 +26,12 @@ class Body extends React.Component {
           <View style={{ flex: 1 }}>
             {user ? (
               <View style={{ flex: 1 }}>
-                <Route exact path="/" component={ChatIndex} />
+                <Route exact path="/" component={Groups} />
                 <Route exact path="/group/:id" component={Channels} />
                 <Route
                   exact
                   path="/group/:id/:channel_id"
-                  component={Messages}
+                  component={ChatScreen}
                 />
               </View>
             ) : (

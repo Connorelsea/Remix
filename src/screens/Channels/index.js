@@ -12,6 +12,8 @@ const Link = Routing.Link
 
 import { Header, HeaderLink, HeaderTitle } from "../../components/Header"
 
+import { withRouter } from "react-router-dom"
+
 class Channels extends React.Component {
   componentWillMount() {}
 
@@ -33,10 +35,16 @@ class Channels extends React.Component {
   render() {
     const channels = this.props.data.Group ? this.props.data.Group.channels : []
     return (
-      <View>
-        <Header>
+      <View
+        style={{
+          flex: 1,
+          maxWidth: this.props.squish && "30%",
+        }}
+      >
+        <Header three>
           <HeaderLink to={`/`}>Back</HeaderLink>
           <HeaderTitle>Channels</HeaderTitle>
+          <HeaderLink to={`/`}>+ Create</HeaderLink>
         </Header>
         <ScrollView>{channels.map(this.renderListItem)}</ScrollView>
       </View>

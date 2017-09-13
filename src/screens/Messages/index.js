@@ -195,7 +195,7 @@ const Time = glamorous.text({
 })
 
 const ViewContainer = glamorous.view({
-  marginBottom: 50,
+  marginBottom: 48,
   flex: 1,
   backgroundColor: "#eee",
 })

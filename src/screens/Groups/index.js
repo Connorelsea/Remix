@@ -1,5 +1,5 @@
 import React from "react"
-import { Text, ScrollView } from "react-native"
+import { Text, View } from "react-native"
 
 import { gql, graphql } from "react-apollo"
 
@@ -10,9 +10,7 @@ const Link = Routing.Link
 
 import { Header, HeaderLink, HeaderTitle } from "../../components/Header"
 
-// TODO: Rename to Groups
-
-class ChatIndex extends React.Component {
+class Groups extends React.Component {
   renderListItem(group) {
     const { id, name, channels, users } = group
 
@@ -34,13 +32,13 @@ class ChatIndex extends React.Component {
     const allGroups = this.props.data.allGroups || []
 
     return (
-      <ScrollView>
+      <View style={{ flex: 1 }}>
         <Header>
           <HeaderTitle>Groups</HeaderTitle>
           <HeaderLink to="/">{process.env.REACT_APP_VERSION}</HeaderLink>
         </Header>
         {allGroups.map(this.renderListItem)}
-      </ScrollView>
+      </View>
     )
   }
 }
@@ -74,4 +72,4 @@ const groupQueryVariables = {
 
 export default graphql(groupQuery, {
   options: { variables: groupQueryVariables },
-})(ChatIndex)
+})(Groups)
