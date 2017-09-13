@@ -15,17 +15,13 @@ import { compose } from "react-apollo"
 // TODO: rename to messages
 
 class Messages extends React.Component {
-  state = {
-    draft: "",
-  }
-
   renderMessage(message) {
     const {
       id,
       name,
       createdAt,
       object: { content },
-      user: { displayName },
+      user: { displayName, colorPrimary, colorSecondary },
     } = message
 
     const date = new Date(createdAt)
@@ -35,7 +31,11 @@ class Messages extends React.Component {
 
     return (
       <MessageContainer>
-        <Message key={id}>
+        <Message
+          key={id}
+          colorPrimary={colorPrimary}
+          colorSecondary={colorSecondary}
+        >
           <UpperContainer>
             <MessageName>{displayName}</MessageName>
             <Time>{`${hours}:${date.getMinutes()}:${date.getSeconds()}`}</Time>
@@ -44,12 +44,6 @@ class Messages extends React.Component {
         </Message>
       </MessageContainer>
     )
-  }
-
-  @bind
-  onDraftChange(draft) {
-    if (this.state.draft == -9) this.setState({ draft: "" })
-    this.setState({ draft })
   }
 
   @bind
@@ -72,9 +66,9 @@ class Messages extends React.Component {
     })
 
     this.scrollView.scrollToEnd({ animated: true })
+    this.input.value = ""
     this.input.clear()
     this.input.selectionState.focus()
-    this.setState({ draft: -9 })
   }
 
   componentDidMount() {
@@ -100,12 +94,6 @@ class Messages extends React.Component {
         </ScrollView>
         <InputContainer>
           <StyleInput
-            innerRef={input => {
-              this.input = input
-            }}
-            autoFocus
-            onChangeText={this.onDraftChange}
-            blurOnSubmit
             onSubmitEditing={this.onDraftSubmit}
             placeholder="Message..."
           />
@@ -122,7 +110,6 @@ const InputContainer = glamorous.view({
   left: 0,
   width: "100%",
   height: 50,
-  padding: 10,
   alignItems: "center",
   borderWidth: "1px",
   borderColor: "#dddfe2",
@@ -132,6 +119,7 @@ const InputContainer = glamorous.view({
 
 const StyleInput = glamorous(TextInput)({
   height: "100%",
+  padding: 10,
   width: "100%",
 })
 
@@ -141,21 +129,26 @@ const MessageContainer = glamorous.view({
   display: "flex",
 })
 
-const Message = glamorous.view({
-  padding: 12,
-  paddingTop: 10,
-  paddingBottom: 10,
-  borderBottomWidth: "1px",
-  borderBottomColor: "#dddfe2",
-  borderBottomStyle: "solid",
-  backgroundColor: "white",
-  borderRadius: 7,
-  maxWidth: "80%",
-  marginLeft: 13,
-  marginBottom: 9,
-  boxShadow: "0 0 0.5px 0 rgba(0,0,0,.14), 0 1px 1px 0 rgba(0,0,0,.24)",
-  transition: "all 0.4s",
-})
+const Message = glamorous.view(
+  {
+    padding: 12,
+    paddingTop: 10,
+    paddingBottom: 10,
+    borderBottomWidth: "1px",
+    borderBottomColor: "#dddfe2",
+    borderBottomStyle: "solid",
+    backgroundColor: "white",
+    borderRadius: 7,
+    maxWidth: "80%",
+    marginLeft: 13,
+    marginBottom: 9,
+    boxShadow: "0 0 0.5px 0 rgba(0,0,0,.14), 0 1px 1px 0 rgba(0,0,0,.24)",
+    transition: "all 0.4s",
+  },
+  ({ colorPrimary, colorSecondary }) => ({
+    background: `linear-gradient(135deg, ${colorSecondary} 0%,${colorPrimary} 100%)`,
+  })
+)
 
 const UpperContainer = glamorous.view({
   flexDirection: "row",
@@ -209,6 +202,8 @@ const channelQuery = gql`
           displayName
           userName
           id
+          colorPrimary
+          colorSecondary
         }
       }
     }

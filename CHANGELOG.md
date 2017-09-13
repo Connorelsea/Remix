@@ -14,3 +14,10 @@
   + Time on Message (HH:MM:SS)
 - Regression
   + Possible: Message input lag
+
+
+# Version 0.1.3
+- Major Feature
+  + Add personal color
+- Bug Fixes
+  + Remove lag from message input
