@@ -12,43 +12,21 @@ const Link = Routing.Link
 
 import { compose } from "react-apollo"
 
-import colorContrast from "font-color-contrast"
-
 import { Header, HeaderLink, HeaderTitle } from "../../components/Header"
 
-// TODO: rename to messages
+import Message from "../Message"
 
 class Messages extends React.Component {
+  @bind
   renderMessage(message) {
-    const {
-      id,
-      name,
-      createdAt,
-      object: { content },
-      user: { displayName, colorPrimary, colorSecondary, ...props },
-    } = message
-
-    const date = new Date(createdAt)
-    let hours = date.getHours()
-
-    if (hours > 12) hours -= 12
-
     return (
-      <MessageContainer
-        you={props.id === window.localStorage.getItem("userId")}
-      >
-        <Message
-          key={id}
-          colorPrimary={colorPrimary}
-          colorSecondary={colorSecondary}
-        >
-          <UpperContainer>
-            <MessageName>{displayName}</MessageName>
-            <Time>{`${hours}:${date.getMinutes()}:${date.getSeconds()}`}</Time>
-          </UpperContainer>
-          <Text>{content}</Text>
-        </Message>
-      </MessageContainer>
+      <Message
+        user={message.user}
+        message={message}
+        lastReads={this.props.data.Channel.lastReads.filter(
+          ({ message: { id } }) => id === message.id
+        )}
+      />
     )
   }
 
@@ -63,8 +41,6 @@ class Messages extends React.Component {
     const refetchVariables = {
       channelId: this.props.match.params.channel_id,
     }
-
-    console.log(variables)
 
     this.props.createMessage({
       variables,
@@ -98,13 +74,18 @@ class Messages extends React.Component {
         </Header>
 
         <ScrollView
-          style={{ height: "100%" }}
+          style={{
+            flex: 1,
+            background:
+              "url(https://i.imgur.com/Rt6TNGp.png) no-repeat center center ",
+            "background-size": "cover",
+          }}
           ref={scroll => {
             this.scrollView = scroll
           }}
           onContentSizeChange={(contentWidth, contentHeight) =>
             this.scrollView.scrollToEnd({ animated: true })}
-          keyboardDismissMode="on-drag"
+          keyboardDismissMode="interactive"
         >
           {messages.map(this.renderMessage)}
         </ScrollView>
@@ -125,11 +106,8 @@ class Messages extends React.Component {
 
 const InputContainer = glamorous.view({
   backgroundColor: "white",
-  position: "fixed",
-  bottom: 0,
-  left: 0,
   width: "100%",
-  height: 50,
+  maxHeight: 50,
   alignItems: "center",
   borderWidth: "1px",
   borderColor: "#dddfe2",
@@ -143,59 +121,7 @@ const StyleInput = glamorous(TextInput)({
   width: "100%",
 })
 
-const MessageContainer = glamorous.view(
-  {
-    justifyContent: "flex-start",
-    flexDirection: "row",
-    display: "flex",
-  },
-  ({ you }) => ({ justifyContent: you && "flex-end" })
-)
-
-const Message = glamorous.view(
-  {
-    padding: 10,
-    paddingTop: 8,
-    paddingBottom: 8,
-    margin: 10,
-    marginTop: 0,
-
-    borderRadius: 5,
-    maxWidth: "80%",
-    // Hovering doesn't work??
-    // transition: "all 0.4s",
-    // "&:hover": {
-    //   boxShadow: "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
-    // },
-    opacity: 1,
-  },
-  ({ colorPrimary, colorSecondary }) => ({
-    background: `linear-gradient(135deg, ${colorSecondary} 0%, ${colorPrimary} 100%)`,
-    transition: "all 0.3s cubic-bezier(.25,.8,.25,1)",
-    boxShadow: `0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)`,
-    color: colorContrast(colorSecondary),
-  })
-)
-
-const UpperContainer = glamorous.view({
-  flexDirection: "row",
-  alignItems: "baseline",
-  marginBottom: 5,
-})
-
-const MessageName = glamorous.text({
-  fontSize: "0.75rem",
-  fontWeight: "bold",
-  marginRight: 8,
-})
-
-const Time = glamorous.text({
-  fontSize: "0.68rem",
-  opacity: 0.5,
-})
-
 const ViewContainer = glamorous.view({
-  marginBottom: 48,
   flex: 1,
   backgroundColor: "#eee",
 })
@@ -217,22 +143,30 @@ const channelQuery = gql`
   query($channelId: ID!) {
     Channel(id: $channelId) {
       name
-      group {
+      lastReads {
         id
+        updatedAt
+        user {
+          displayName
+        }
+        message {
+          id
+        }
       }
       messages {
+        id
         messageType
         createdAt
-        object {
-          objectType
-          content
-        }
         user {
           displayName
           userName
           id
           colorPrimary
           colorSecondary
+        }
+        object {
+          objectType
+          content
         }
       }
     }

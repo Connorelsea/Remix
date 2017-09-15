@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import { AppRegistry } from "react-native";
-import App from "./src/App";
+import React, { Component } from "react"
+import { AppRegistry } from "react-native"
+import App from "./src/App"
 
 export default class everywhere extends Component {
   render() {
-    return <App />;
+    return <App />
   }
 }
-AppRegistry.registerComponent("Remix", () => everywhere);
+AppRegistry.registerComponent("Remix", () => everywhere)

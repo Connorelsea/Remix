@@ -24,7 +24,7 @@
 
 # Version 0.1.4
 - Features
-  + Auto-selecting input
+  + Always-selected input
   + Basic app headers
 - Enhancements
   + Message bubble design updates
@@ -38,5 +38,12 @@
 
 # Version 0.1.5
 - Features
+  + Web iframe embed
+  + Spotify Integration
   + Desktop layout for chat
     - Bug: isn't fully "drag" responsive, uses initial width
+- Enhancements
+  + Fix desktop scrolling
+  + Fix message input positioning on split view
+  + Add background image default
+  + Add delete content message

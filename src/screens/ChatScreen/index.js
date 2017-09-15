@@ -1,16 +1,14 @@
 import React, { Component } from "react"
-import { Text, View } from "react-native"
+import { View } from "react-native"
 import glamorous from "glamorous-primitives"
 
 import Channels from "../Channels"
 import Messages from "../Messages"
 
-import { withRouter } from "react-router-dom"
-
-class ChatScreen extends Component {
+export default class ChatScreen extends Component {
   render() {
     return (
-      <Container>
+      <View style={{ flexDirection: "row", flex: 1 }}>
         {window.innerWidth > 500 && (
           <Channels match={this.props.match} squish />
         )}
@@ -18,14 +16,7 @@ class ChatScreen extends Component {
         this.props.match.params.channel_id && (
           <Messages match={this.props.match} />
         )}
-      </Container>
+      </View>
     )
   }
 }
-
-export default ChatScreen
-
-const Container = glamorous.view({
-  flexDirection: "row",
-  flex: 1,
-})
