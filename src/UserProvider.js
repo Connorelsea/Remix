@@ -25,7 +25,8 @@ class UserProvider extends React.Component {
       this.props.data.user === null &&
       window.localStorage.getItem("auth0IdToken")
     ) {
-      return <UserFirstSetup />
+      window.localStorage.setItem("auth0IdToken", "")
+      return <Text>Your token has expired, refresh and log back in</Text>
       // this.props.router.replace(`/login`)
     }
 

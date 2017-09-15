@@ -12,19 +12,34 @@ import {
   ApolloClient,
   ApolloProvider,
   createNetworkInterface,
-  // gql,
-  // graphql,
 } from "react-apollo"
+
+import {
+  SubscriptionClient,
+  addGraphQLSubscriptions,
+} from "subscriptions-transport-ws"
 
 import Auth0Lock from "auth0-lock"
 
 import Body from "./Body"
 
+const wsClient = new SubscriptionClient(
+  `wss://subscriptions.graph.cool/v1/cj7bjx88t1ir1019460i39dmi`,
+  {
+    reconnect: true,
+  }
+)
+
 const networkInterface = createNetworkInterface({
   uri: "https://api.graph.cool/simple/v1/cj7bjx88t1ir1019460i39dmi",
 })
 
-networkInterface.use([
+const networkInterfaceWithSubscriptions = addGraphQLSubscriptions(
+  networkInterface,
+  wsClient
+)
+
+networkInterfaceWithSubscriptions.use([
   {
     applyMiddleware(req, next) {
       if (!req.options.headers) {
@@ -46,7 +61,9 @@ networkInterface.use([
   },
 ])
 
-let client = new ApolloClient({ networkInterface })
+let client = new ApolloClient({
+  networkInterface: networkInterfaceWithSubscriptions,
+})
 
 class App extends React.Component {
   state = {

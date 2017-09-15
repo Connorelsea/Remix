@@ -40,6 +40,7 @@ module.exports = {
     // the line below with these two lines if you prefer the stock client:
     // require.resolve('webpack-dev-server/client') + '?/',
     // require.resolve('webpack/hot/dev-server'),
+    "react-hot-loader/patch",
     require.resolve("react-dev-utils/webpackHotDevClient"),
     // We ship a few polyfills by default:
     require.resolve("./polyfills"),
@@ -132,7 +133,12 @@ module.exports = {
           // This is a feature of `babel-loader` for webpack (not Babel itself).
           // It enables caching results in ./node_modules/.cache/babel-loader/
           // directory for faster rebuilds.
-          plugins: ["transform-decorators-legacy"],
+          presets: [["es2015", { modules: false }]],
+          plugins: [
+            "react-hot-loader/babel",
+            "transform-class-properties",
+            "transform-decorators-legacy",
+          ],
           cacheDirectory: true,
         },
       },

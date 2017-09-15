@@ -52,6 +52,48 @@ class Messages extends React.Component {
     this.draftInput.selectionState.focus()
   }
 
+  componentWillMount() {
+    // this.props.createMessage.subscribeToMore({
+    //   document: gql`
+    //     subcription($channelId: ID!) {
+    //       Channel(id: $channelId) {
+    //         name
+    //         lastReads {
+    //           id
+    //           updatedAt
+    //           user {
+    //             displayName
+    //           }
+    //           message {
+    //             id
+    //           }
+    //         }
+    //         messages {
+    //           id
+    //           messageType
+    //           createdAt
+    //           user {
+    //             displayName
+    //             userName
+    //             id
+    //             colorPrimary
+    //             colorSecondary
+    //           }
+    //           object {
+    //             objectType
+    //             content
+    //           }
+    //         }
+    //       }
+    //     }
+    //   `,
+    //   updateQuery: (previousState, { subscriptionData }) => {
+    //     console.log(previousState, subscriptionData)
+    //   },
+    //   onError: error => console.error(error),
+    // })
+  }
+
   componentDidMount() {
     this.scrollView.scrollToEnd({ animated: true })
   }

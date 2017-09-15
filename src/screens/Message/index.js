@@ -133,8 +133,8 @@ const UpperContainer = glamorous.view({
 })
 
 const MessageName = glamorous.text({
-  fontSize: "0.75rem",
-  fontWeight: "bold",
+  fontSize: "0.8rem",
+  fontWeight: "600",
   marginRight: 8,
 })
 
