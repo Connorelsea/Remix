@@ -1,6 +1,6 @@
 import React from "react"
 import { gql, graphql } from "react-apollo"
-
+import { Text, Button } from "react-native"
 import UserFirstSetup from "./screens/UserFirstSetup"
 
 class UserProvider extends React.Component {
@@ -25,11 +25,7 @@ class UserProvider extends React.Component {
       this.props.data.user === null &&
       window.localStorage.getItem("auth0IdToken")
     ) {
-      // this also happens when token expires i think
-      console.log("user first setup")
-      window.localStorage.setItem("auth0IdToken", "")
-      return location.reload()
-      // return <UserFirstSetup />
+      return <UserFirstSetup />
       // this.props.router.replace(`/login`)
     }
 

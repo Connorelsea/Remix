@@ -80,9 +80,9 @@ class App extends React.Component {
 
     this.lock.on("authenticated", authResult => {
       console.log("SETTING ON LOCAL STORAGE", authResult)
-      alert(JSON.stringify(authResult))
+      // alert(JSON.stringify(authResult))
       window.localStorage.setItem("auth0IdToken", authResult.idToken)
-      // this.setState({ loggedIn: true })
+      location.reload()
     })
   }
 
