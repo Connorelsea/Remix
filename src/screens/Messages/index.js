@@ -1,14 +1,13 @@
 import React from "react"
-import { Text, ScrollView, View, Button, TextInput } from "react-native"
+import { ScrollView, TextInput } from "react-native"
 
 import { gql, graphql } from "react-apollo"
 
 import glamorous from "glamorous-primitives"
 
-import { bind } from "decko"
+import { bind, memoize } from "decko"
 
 import Routing from "../../utilities/routing"
-const Link = Routing.Link
 
 import { compose } from "react-apollo"
 
@@ -18,16 +17,51 @@ import Message from "../Message"
 
 class Messages extends React.Component {
   @bind
-  renderMessage(message) {
-    return (
-      <Message
-        user={message.user}
-        message={message}
-        lastReads={this.props.data.Channel.lastReads.filter(
-          ({ message: { id } }) => id === message.id
-        )}
-      />
-    )
+  @memoize
+  renderMessages(messages) {
+    if (messages.length === 0) return undefined
+
+    let calc = function() {
+      this.currentFoundUsername = messages[this.currentIndex].user.userName
+
+      if (this.lastFoundUsername === this.currentFoundUsername)
+        this.dontUseUser = true
+      else {
+        this.lastFoundUsername = this.currentFoundUsername
+        this.dontUseUser = false
+      }
+
+      return this.dontUseUser
+    }
+
+    let object = {
+      lastFoundUsername: "",
+      dontUseUser: false,
+      currentIndex: 0,
+      currentFoundUsername: messages[0].user.userName,
+      props: this.props,
+      calc: calc,
+    }
+
+    object[calc] = calc.bind(object)
+
+    let bindedFunction = function(message, i) {
+      this.currentIndex = i
+      const co = this.calc()
+      return (
+        <Message
+          key={message.id}
+          user={message.user}
+          message={message}
+          //lastReads={this.props.data.Channel.lastReads.filter(
+          // ({ message: { id } }) => id === message.id
+          //)}
+          dontUseUser={co}
+        />
+      )
+    }.bind(object)
+
+    return messages.map(bindedFunction)
   }
 
   @bind
@@ -44,54 +78,32 @@ class Messages extends React.Component {
 
     this.props.createMessage({
       variables,
+      optimisticResponse: {
+        __typename: "Mutation",
+        createMessage: {
+          id: "asd",
+          _typename: "Comment",
+          object: {
+            id: "asdas",
+            type: "Text",
+            content: draft.nativeEvent.text,
+          },
+        },
+        update: (store, { data: { createMessage } }) => {
+          // Read the data from our cache for this query.
+          const data = store.readQuery({ query: createMessageMutation })
+          // Add our comment from the mutation to the end.
+          data.messages.push(createMessage)
+          // Write our data back to the cache.
+          store.writeQuery({ query: createMessageMutation, data })
+        },
+      },
       refetchQueries: [{ query: channelQuery, variables: refetchVariables }],
     })
 
     this.scrollView.scrollToEnd({ animated: true })
     this.draftInput.clear()
     this.draftInput.selectionState.focus()
-  }
-
-  componentWillMount() {
-    // this.props.createMessage.subscribeToMore({
-    //   document: gql`
-    //     subcription($channelId: ID!) {
-    //       Channel(id: $channelId) {
-    //         name
-    //         lastReads {
-    //           id
-    //           updatedAt
-    //           user {
-    //             displayName
-    //           }
-    //           message {
-    //             id
-    //           }
-    //         }
-    //         messages {
-    //           id
-    //           messageType
-    //           createdAt
-    //           user {
-    //             displayName
-    //             userName
-    //             id
-    //             colorPrimary
-    //             colorSecondary
-    //           }
-    //           object {
-    //             objectType
-    //             content
-    //           }
-    //         }
-    //       }
-    //     }
-    //   `,
-    //   updateQuery: (previousState, { subscriptionData }) => {
-    //     console.log(previousState, subscriptionData)
-    //   },
-    //   onError: error => console.error(error),
-    // })
   }
 
   componentDidMount() {
@@ -129,7 +141,7 @@ class Messages extends React.Component {
             this.scrollView.scrollToEnd({ animated: true })}
           keyboardDismissMode="interactive"
         >
-          {messages.map(this.renderMessage)}
+          {this.renderMessages(this.props.messages)}
         </ScrollView>
         <InputContainer>
           <StyleInput
@@ -217,7 +229,6 @@ const channelQuery = gql`
 
 const channelQueryOptions = ({ match: { params: { channel_id } } }) => ({
   variables: { channelId: channel_id },
-  pollInterval: 3000,
 })
 
 const createMessageMutationOptions = {

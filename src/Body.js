@@ -18,16 +18,14 @@ import UserProvider from "./UserProvider"
 
 class Body extends React.Component {
   render() {
-    console.log("data", this.props)
-
     return (
       <UserProvider>
         {user => (
           <View style={{ flex: 1 }}>
             {user ? (
               <View style={{ flex: 1 }}>
-                <Route exact path="/" component={Groups} />
-                <Route exact path="/group/:id" component={Channels} />
+                <Route exact path="/" component={ChatScreen} />
+                <Route exact path="/group/:id" component={ChatScreen} />
                 <Route
                   exact
                   path="/group/:id/:channel_id"

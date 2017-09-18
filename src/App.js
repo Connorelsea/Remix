@@ -23,6 +23,8 @@ import Auth0Lock from "auth0-lock"
 
 import Body from "./Body"
 
+import { withRouter } from "react-router-dom"
+
 const wsClient = new SubscriptionClient(
   `wss://subscriptions.graph.cool/v1/cj7bjx88t1ir1019460i39dmi`,
   {
@@ -48,13 +50,9 @@ networkInterfaceWithSubscriptions.use([
 
       console.log("applying middleware")
 
-      // get the authentication token from local storage if it exists
-      if (localStorage.getItem("auth0IdToken")) {
-        console.log("apply header", localStorage.getItem("auth0IdToken"))
-        req.options.headers.authorization = `Bearer ${localStorage.getItem(
-          "auth0IdToken"
-        )}`
-      }
+      const token = localStorage.getItem("auth0IdToken")
+      console.log("apply header", token)
+      req.options.headers.authorization = token ? `Bearer ${token}` : null
 
       next()
     },
@@ -66,39 +64,26 @@ let client = new ApolloClient({
 })
 
 class App extends React.Component {
-  state = {
-    loggedIn: false,
-  }
-
   constructor(props) {
     super(props)
 
     this.lock = new Auth0Lock(
       "ng5lhb04aIUeeTkzmjG6xJaS4uONSr32",
-      "connorelsea.auth0.com",
-      {
-        auth: {
-          responseType: "id_token token",
-        },
-        scope: "openid offline_access",
-      }
+      "connorelsea.auth0.com"
+      // {
+      //   auth: {
+      //     responseType: "id_token token",
+      //   },
+      //   scope: "openid offline_access",
+      // }
     )
   }
 
   componentDidMount() {
-    // if (window.localStorage.getItem("auth0IdToken")) {
-    //   this.setState({ loggedIn: true })
-    // }
-
-    // if (window.localStorage.getItem("userId")) {
-    //   console.log("TRUUU")
-    //   this.setState({ loggedIn: true })
-    // }
-
     this.lock.on("authenticated", authResult => {
       console.log("SETTING ON LOCAL STORAGE", authResult)
-      // alert(JSON.stringify(authResult))
       window.localStorage.setItem("auth0IdToken", authResult.idToken)
+      window.localStorage.setItem("recentAuth", true)
       location.reload()
     })
   }
@@ -118,7 +103,7 @@ class App extends React.Component {
       <ApolloProvider client={client}>
         <Provider store={store}>
           <Router>
-            <Body showLogin={this.showLogin} loggedIn={this.state.loggedIn} />
+            <Body showLogin={this.showLogin} client={client} />
           </Router>
         </Provider>
       </ApolloProvider>

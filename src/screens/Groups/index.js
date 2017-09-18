@@ -32,7 +32,7 @@ class Groups extends React.Component {
     const allGroups = this.props.data.allGroups || []
 
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, maxWidth: "16%" }}>
         <Header>
           <HeaderTitle>Groups</HeaderTitle>
           <HeaderLink to="/">{process.env.REACT_APP_VERSION}</HeaderLink>
@@ -46,6 +46,7 @@ class Groups extends React.Component {
 const Container = glamorous.view({
   backgroundColor: "#fff",
   padding: 20,
+  flex: 1,
   borderBottomWidth: "1px",
   borderBottomColor: "#dddfe2",
   borderBottomStyle: "solid",

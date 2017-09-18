@@ -1,9 +1,8 @@
 import React, { Component } from "react"
 import glamorous from "glamorous-primitives"
-import { Text, ScrollView, View, Button, TextInput } from "react-native"
+import { Text } from "react-native"
 
 import colorContrast from "font-color-contrast"
-import VisibilitySensor from "react-visibility-sensor"
 
 import Frame from "../../components/Frame"
 
@@ -14,7 +13,8 @@ export default class Message extends Component {
     const {
       message: { id, createdAt, object },
       user: { displayName, colorPrimary, colorSecondary, ...props },
-      lastReads,
+      // lastReads,
+      dontUseUser,
     } = this.props
 
     const date = new Date(createdAt)
@@ -22,42 +22,42 @@ export default class Message extends Component {
 
     if (hours > 12) hours -= 12
 
-    let lastReadComponent
+    let lastReadComponent = undefined
 
     const content = object ? object.content : "deleted"
     const objectType = object ? object.objectType : "deleted"
 
-    if (lastReads.length > 0) {
-      console.log("readssss")
-      lastReadComponent = (
-        <MessageReadContainer>
-          {lastReads.map(({ updatedAt, user: { displayName } }) => (
-            <MessageRead>Read: {displayName}</MessageRead>
-          ))}
-        </MessageReadContainer>
-      )
-    }
+    // if (lastReads.length > 0) {
+    //   lastReadComponent = (
+    //     <MessageReadContainer>
+    //       {lastReads.map(({ updatedAt, user: { displayName } }) => (
+    //         <MessageRead key={displayName}>Read: {displayName}</MessageRead>
+    //       ))}
+    //     </MessageReadContainer>
+    //   )
+    // }
 
     return (
-      <VisibilitySensor onChange={this.onVisibleChange}>
-        <MessageContainer
-          you={props.id === window.localStorage.getItem("userId")}
+      <MessageContainer
+        you={props.id === window.localStorage.getItem("userId")}
+      >
+        <MessageBubble
+          key={id}
+          colorPrimary={colorPrimary}
+          colorSecondary={colorSecondary}
+          dontUseUser={dontUseUser}
         >
-          <MessageBubble
-            key={id}
-            colorPrimary={colorPrimary}
-            colorSecondary={colorSecondary}
-          >
+          {!dontUseUser && (
             <UpperContainer>
               <MessageName>{displayName}</MessageName>
               <Time
               >{`${hours}:${date.getMinutes()}:${date.getSeconds()}`}</Time>
             </UpperContainer>
-            <Text>{this.renderContent(content, objectType)}</Text>
-          </MessageBubble>
-          {lastReadComponent}
-        </MessageContainer>
-      </VisibilitySensor>
+          )}
+          <Text>{this.renderContent(content, objectType)}</Text>
+        </MessageBubble>
+        {lastReadComponent}
+      </MessageContainer>
     )
   }
 
@@ -71,7 +71,13 @@ export default class Message extends Component {
           </Text>
         )
       case "Text":
-        return <Text>{content}</Text>
+        return (
+          <Text
+            style={{ color: colorContrast(this.props.user.colorSecondary) }}
+          >
+            {content}
+          </Text>
+        )
       case "SpotifyTrack":
         return (
           <Frame
@@ -88,10 +94,6 @@ export default class Message extends Component {
         )
     }
   }
-
-  onVisibleChange(visible) {
-    console.log(visible)
-  }
 }
 
 const MessageContainer = glamorous.view(
@@ -99,6 +101,7 @@ const MessageContainer = glamorous.view(
     flexDirection: "column",
     margin: 10,
     marginTop: 0,
+    marginBottom: 3,
   },
   ({ you }) => ({ alignItems: you ? "flex-end" : "flex-start" })
 )
@@ -111,35 +114,36 @@ const MessageBubble = glamorous.view(
 
     borderRadius: 6,
     maxWidth: "90%",
-    // Hovering doesn't work??
-    // transition: "all 0.4s",
-    // "&:hover": {
-    //   boxShadow: "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
-    // },
     opacity: 1,
   },
-  ({ colorPrimary, colorSecondary }) => ({
+  ({ colorPrimary, colorSecondary, dontUseUser }) => ({
     background: `linear-gradient(135deg, ${colorSecondary} 0%, ${colorPrimary} 100%)`,
     transition: "all 0.3s cubic-bezier(.25,.8,.25,1)",
     boxShadow: `0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)`,
     color: colorContrast(colorSecondary),
+    marginTop: !dontUseUser && 12,
   })
 )
 
-const UpperContainer = glamorous.view({
-  flexDirection: "row",
-  alignItems: "baseline",
-  marginBottom: 5,
-})
+const UpperContainer = glamorous.view(
+  {
+    flexDirection: "row",
+    alignItems: "baseline",
+    marginBottom: 5,
+  },
+  ({ useLastUser }) => ({ display: useLastUser ? "none" : "block" })
+)
 
 const MessageName = glamorous.text({
-  fontSize: "0.8rem",
+  fontSize: "0.9rem",
   fontWeight: "600",
   marginRight: 8,
+  opacity: 0.85,
 })
 
 const Time = glamorous.text({
-  fontSize: "0.68rem",
+  fontSize: "0.76rem",
+  fontWeight: "300",
   opacity: 0.5,
 })
 

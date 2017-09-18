@@ -1,13 +1,9 @@
 import React from "react"
 import { gql, graphql } from "react-apollo"
-import { Text, Button } from "react-native"
+import { Text } from "react-native"
 import UserFirstSetup from "./screens/UserFirstSetup"
 
 class UserProvider extends React.Component {
-  componentWillReceiveProps(newProps) {
-    console.log("new props", newProps)
-  }
-
   render() {
     console.log(this.props.data)
     console.log("hello")
@@ -20,14 +16,20 @@ class UserProvider extends React.Component {
       return <div>Loading</div>
     }
 
-    if (
-      this.props.data.loading === false &&
-      this.props.data.user === null &&
-      window.localStorage.getItem("auth0IdToken")
-    ) {
-      window.localStorage.setItem("auth0IdToken", "")
-      return <Text>Your token has expired, refresh and log back in</Text>
-      // this.props.router.replace(`/login`)
+    console.log("RECENT AUTH", window.localStorage.getItem("recentAuth"))
+
+    const recentAuth = window.localStorage.getItem("recentAuth")
+
+    console.log(this.props.data.user)
+
+    if (this.props.data.user && this.props.data.user.displayName)
+      return this.props.children(this.props.data.user)
+
+    if (recentAuth === "true" && this.props.data.user) {
+      console.log("inside of return")
+      return <UserFirstSetup />
+    } else {
+      console.log("NOT", recentAuth)
     }
 
     return this.props.children(this.props.data.user)
@@ -38,6 +40,7 @@ const userQuery = gql`
   query {
     user {
       id
+      displayName
     }
   }
 `

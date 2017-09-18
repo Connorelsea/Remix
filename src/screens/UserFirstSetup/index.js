@@ -29,8 +29,9 @@ class UserFirstSetup extends React.Component {
       .then(response => {
         console.log("After create user")
         console.log(response)
+        window.localStorage.setItem("recentAuth", false)
         window.localStorage.setItem("userId", response.data.createUser.id)
-        this.props.router.replace(`/`)
+        this.props.history.replace(`/`)
       })
       .catch(error => console.error("error on create", error))
   }
@@ -81,5 +82,3 @@ export default graphql(createUser, { name: "createUser" })(
     withRouter(UserFirstSetup)
   )
 )
-
-// export default graphql(createUser, { name: "createUser" })(UserFirstSetup)

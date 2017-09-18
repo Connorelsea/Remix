@@ -15,13 +15,12 @@ import { Header, HeaderLink, HeaderTitle } from "../../components/Header"
 import { withRouter } from "react-router-dom"
 
 class Channels extends React.Component {
-  componentWillMount() {}
-
   @bind
   renderListItem(channel) {
     const { id, name } = channel
+
     return (
-      <ChannelLink>
+      <ChannelLink active={this.props.match.params.channel_id === id}>
         <Link to={`/group/${this.props.match.params.id}/${id}`}>
           <ChannelLinkText>
             <span>#</span>
@@ -38,7 +37,7 @@ class Channels extends React.Component {
       <View
         style={{
           flex: 1,
-          maxWidth: this.props.squish && "30%",
+          maxWidth: "28%",
         }}
       >
         <Header three>
@@ -52,15 +51,19 @@ class Channels extends React.Component {
   }
 }
 
-const ChannelLink = glamorous.view({
-  backgroundColor: "#fff",
-  width: "100%",
-  padding: 20,
-  borderBottomWidth: "1px",
-  borderBottomColor: "#dddfe2",
-  borderBottomStyle: "solid",
-  cursor: "pointer",
-})
+const ChannelLink = glamorous.view(
+  {
+    width: "100%",
+    padding: 20,
+    borderBottomWidth: "1px",
+    borderBottomColor: "#dddfe2",
+    borderBottomStyle: "solid",
+    cursor: "pointer",
+  },
+  ({ active }) => ({
+    backgroundColor: active ? "#eee" : "#fff",
+  })
+)
 
 const ChannelLinkText = glamorous.text({
   fontWeight: "bold",
@@ -84,4 +87,4 @@ const options = ({ match: { params: { id } } }) => ({
   variables: { groupId: id },
 })
 
-export default graphql(channelQuery, { options })(Channels)
+export default graphql(channelQuery, { options })(withRouter(Channels))
